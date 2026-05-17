@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼多多商品数据展示</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <h1>拼多多实时商品数据</h1>
+        <div class="loading" id="loading">正在加载商品数据...</div>
+        <div class="product-grid" id="products"></div>
+    </div>
+
+    <script>
+        fetch('/api/products')
+            .then(response => response.json())
+            .then(data => {
+                const loading = document.getElementById('loading');
+                const container = document.getElementById('products');
+                
+                loading.style.display = 'none';
+                
+                if(data.success) {
+                    data.products.forEach(product => {
+                        const productCard = document.createElement('div');
+                        productCard.className = 'product-card';
+                        productCard.innerHTML = `
+                            <img src="${product.image}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <div class="price">${product.price}</div>
+                        `;
+                        container.appendChild(productCard);
+                    });
+                } else {
+                    container.innerHTML = `<div class="error">数据加载失败：${data.error}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    </script>
+</body>
+</html>
