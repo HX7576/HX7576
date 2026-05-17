@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人健康智能管理系统</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app">
+    <section class="login-screen" id="loginScreen">
+      <div class="prototype-container login-container">
+        <div class="prototype-title">个人健康智能管理系统</div>
+        <div class="login-page">
+          <div class="left-panel">
+            <h1><span class="brand-mark">✚</span> 个人健康智能管理系统</h1>
+            <p>连接 Spring Boot、MySQL 与 DeepSeek 大模型，完成健康数据管理、体检报告解读、运动知识推荐和个性化健康建议。</p>
+            <div class="feature-list">
+              <div class="feature-item"><div class="feature-icon">📊</div><span>健康数据统一管理</span></div>
+              <div class="feature-item"><div class="feature-icon">🤖</div><span>AI 智能分析与建议</span></div>
+              <div class="feature-item"><div class="feature-icon">📋</div><span>体检报告智能解读</span></div>
+              <div class="feature-item"><div class="feature-icon">🏃</div><span>运动知识与健康方案</span></div>
+            </div>
+          </div>
+          <form class="right-panel" id="loginForm">
+            <div class="login-header">
+              <h2>欢迎登录</h2>
+              <p>默认账号：admin / 123456</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="username">用户名</label>
+              <input class="form-input" id="username" value="admin" autocomplete="username" placeholder="请输入用户名">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="password">密码</label>
+              <input class="form-input" id="password" type="password" value="123456" autocomplete="current-password" placeholder="请输入密码">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="apiBase">后端 API 地址</label>
+              <input class="form-input" id="apiBase" value="http://localhost:9999" placeholder="例如：http://localhost:9999">
+            </div>
+            <div class="remember-forgot">
+              <label class="checkbox-label"><input checked disabled type="checkbox"> 连接真实后端</label>
+              <a class="forgot-link" href="#" id="checkBackend">检测连接</a>
+            </div>
+            <button class="login-button" type="submit">登录系统</button>
+            <div class="register-link">请先启动后端服务，并确认 MySQL 数据库 health 可用。</div>
+            <p class="message" id="loginMessage"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="app-screen hidden" id="appScreen">
+      <div class="prototype-container app-container">
+        <div class="prototype-title" id="figureTitle">个人健康智能管理系统</div>
+        <div class="dashboard">
+          <aside class="sidebar">
+            <div class="logo"><span class="logo-icon">✚</span><span>健康管理</span></div>
+            <button class="menu-item active" data-page="dashboard"><span class="menu-icon">📊</span><span class="menu-index">01</span><span>数据概览</span></button>
+            <button class="menu-item" data-page="body"><span class="menu-icon">📝</span><span class="menu-index">02</span><span>身体信息上传</span></button>
+            <button class="menu-item" data-page="data"><span class="menu-icon">🗂</span><span class="menu-index">03</span><span>健康数据管理</span></button>
+            <button class="menu-item" data-page="ai"><span class="menu-icon">🤖</span><span class="menu-index">04</span><span>AI 智能分析</span></button>
+            <button class="menu-item" data-page="report"><span class="menu-icon">📋</span><span class="menu-index">05</span><span>体检报告解读</span></button>
+            <button class="menu-item" data-page="suggestion"><span class="menu-icon">💡</span><span class="menu-index">06</span><span>健康评估建议</span></button>
+            <button class="menu-item" data-page="sport"><span class="menu-icon">🏃</span><span class="menu-index">07</span><span>运动知识</span></button>
+            <button class="menu-item" data-page="admin"><span class="menu-icon">⚙</span><span class="menu-index">08</span><span>系统管理</span></button>
+          </aside>
+
+          <section class="main-content">
+            <header class="header">
+              <div>
+                <div class="welcome" id="pageHeading">欢迎回来，龙辉铉</div>
+                <div class="subline" id="pageSubline">健康数据管理、运动知识推荐与 AI 智能分析</div>
+              </div>
+              <div class="user-info">
+                <span id="modeBadge">数据库连接中</span>
+                <span id="clockText">2026-05-15 17:00</span>
+                <div class="avatar" id="avatarText">龙</div>
+              </div>
+            </header>
+
+            <section class="page active" id="page-dashboard">
+              <div class="stats-grid">
+                <div class="stat-card blue"><div class="stat-icon">💓</div><div class="stat-value" id="heartRateStat">--</div><div class="stat-label">心率（次/分）</div></div>
+                <div class="stat-card green"><div class="stat-icon">🩺</div><div class="stat-value" id="pressureStat">--</div><div class="stat-label">血压（mmHg）</div></div>
+                <div class="stat-card orange"><div class="stat-icon">🧪</div><div class="stat-value" id="sugarStat">--</div><div class="stat-label">血糖（mmol/L）</div></div>
+                <div class="stat-card red"><div class="stat-icon">⚖</div><div class="stat-value" id="bmiStat">--</div><div class="stat-label">BMI 指数</div></div>
+              </div>
+              <div class="content-grid">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title"><span class="title-icon">📈</span>健康趋势分析</div>
+                    <button class="view-more" data-page-link="data">查看详情</button>
+                  </div>
+                  <div class="chart-placeholder" id="trendChart"></div>
+                </div>
+                <div class="card">
+                  <div class="card-header"><div class="card-title"><span class="title-icon">📌</span>今日健康数据</div></div>
+                  <div id="todayHealthList"></div>
+                </div>
+              </div>
+              <div class="card ai-card">
+                <div class="card-header">
+                  <div class="card-title"><span class="title-icon">🤖</span>AI 智能建议</div>
+                  <button class="view-more" data-page-link="ai">查看更多</button>
+                </div>
+                <div id="dashboardSuggestionList"></div>
+              </div>
+            </section>
+
+            <section class="page" id="page-body">
+              <div class="page-header">
+                <div class="page-title"><span class="title-icon">📝</span>身体信息上传</div>
+                <button class="btn btn-primary" id="saveBodyBtn">保存身体信息</button>
+              </div>
+              <form class="body-form" id="bodyForm">
+                <label>姓名<input name="name" value="龙辉铉"></label>
+                <label>年龄<input name="age" type="number" value="22"></label>
+                <label>性别<select name="gender"><option>男</option><option>女</option></select></label>
+                <label>身高(m)<input name="height" type="number" step="0.01" value="1.75"></label>
+                <label>体重(kg)<input name="weight" type="number" step="0.1" value="68.5"></label>
+                <label>血糖(mmol/L)<input name="bloodSugar" type="number" step="0.1" value="5.8"></label>
+                <label>血压(mmHg)<input name="bloodPressure" value="125/82"></label>
+                <label>血脂(mmol/L)<input name="bloodLipid" value="5.2"></label>
+                <label>心率<input name="heartRate" type="number" value="75"></label>
+                <label>视力<input name="vision" type="number" value="200"></label>
+                <label>睡眠时长<input name="sleepDuration" type="number" value="7"></label>
+                <label>睡眠质量<select name="sleepQuality"><option>良好</option><option>一般</option><option>较差</option></select></label>
+                <label>饮食类型<input name="foodTypes" value="蔬菜、水果、鱼类"></label>
+                <label>每日饮水量(ml)<input name="waterConsumption" type="number" value="1800"></label>
+              </form>
+              <p class="message" id="bodyMessage"></p>
+            </section>
+
+            <section class="page" id="page-data">
+              <div class="page-header">
+                <div class="page-title"><span class="title-icon">🗂</span>健康数据管理</div>
+                <div class="action-buttons">
+                  <button class="btn btn-secondary" id="loadBodyList">读取真实数据</button>
+                  <button class="btn btn-primary" id="addRecordBtn">添加数据</button>
+                </div>
+              </div>
+              <div class="filter-bar">
+                <div class="filter-item"><label class="filter-label">数据类型</label><select class="filter-input" id="typeFilter"><option>全部类型</option><option>体检数据</option><option>日常监测</option><option>运动数据</option></select></div>
+                <div class="filter-item"><label class="filter-label">开始时间</label><input class="filter-input" type="date" value="2026-04-01"></div>
+                <div class="filter-item"><label class="filter-label">结束时间</label><input class="filter-input" type="date" value="2026-05-15"></div>
+                <div class="filter-item"><label class="filter-label">关键词搜索</label><input class="filter-input" id="keywordInput" placeholder="搜索数据、状态、姓名"></div>
+                <div class="filter-item filter-action"><button class="btn btn-primary" id="searchBtn">搜索</button></div>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>记录ID</th><th>数据类型</th><th>血压</th><th>血糖</th><th>心率</th><th>体重</th><th>状态</th><th>记录时间</th><th>操作</th></tr></thead>
+                  <tbody id="recordsBody"></tbody>
+                </table>
+              </div>
+              <div class="pagination" id="recordsPagination"></div>
+            </section>
+
+            <section class="page" id="page-ai">
+              <div class="page-header"><div class="page-title"><span class="title-icon">🤖</span>AI 智能分析</div></div>
+              <div class="tabs">
+                <button class="tab active">体检报告解读</button>
+                <button class="tab">健康风险评估</button>
+                <button class="tab">数据趋势分析</button>
+                <button class="tab">个性化建议</button>
+              </div>
+              <div class="analysis-grid">
+                <div class="card ai-input-card">
+                  <div class="card-header"><span class="card-title"><span class="title-icon">📋</span>输入体检报告</span></div>
+                  <div class="input-section">
+                    <label class="input-label">请输入血压、血糖、血脂、心率、体重、睡眠等健康数据：</label>
+                    <textarea class="textarea" id="reportText" placeholder="示例：血糖 6.4 mmol/L，血脂 5.8 mmol/L，血压 135/86 mmHg，心率 80 次/分，近期睡眠不足，运动频率偏低。"></textarea>
+                    <div class="input-tip" id="reportTip">内容应包含具体健康指标，不能只输入姓名、问候或无关文字。</div>
+                  </div>
+                  <button class="btn btn-primary" id="runAiBtn">开始 AI 分析</button>
+                  <div class="loading-steps hidden" id="loadingSteps"></div>
+                  <div class="result-section" id="aiResultBox">
+                    <div class="result-title">AI 分析结果</div>
+                    <div class="result-source" id="aiSourceText">等待调用 DeepSeek 模型</div>
+                    <div class="result-content">点击“开始 AI 分析”后，系统会通过后端调用 DeepSeek 模型返回结构化健康评估。</div>
+                  </div>
+                </div>
+                <div class="card score-card">
+                  <div class="card-header"><span class="card-title"><span class="title-icon">🧭</span>健康评分</span></div>
+                  <div class="score-display"><div class="score-circle"><div class="score-value" id="scoreValue">--</div><div class="score-label">健康评分</div></div></div>
+                  <div class="risk-level">
+                    <div class="risk-item risk-low"><div class="risk-item-title">心血管风险</div><div class="risk-item-value green-text">低</div></div>
+                    <div class="risk-item risk-medium"><div class="risk-item-title">代谢风险</div><div class="risk-item-value orange-text">中</div></div>
+                    <div class="risk-item risk-low"><div class="risk-item-title">肝功能风险</div><div class="risk-item-value green-text">低</div></div>
+                  </div>
+                  <div class="warning-box"><strong>风险提示</strong><p>代谢风险主要与血糖、血脂、血压、体重、睡眠和运动频率有关，建议结合历史记录持续观察。</p></div>
+                </div>
+                <div class="card full-width-card suggestion-card">
+                  <div class="card-header"><span class="card-title"><span class="title-icon">💡</span>个性化健康建议</span></div>
+                  <div class="suggestion-list" id="suggestionList"></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="page" id="page-report">
+              <div class="page-header"><div class="page-title"><span class="title-icon">📋</span>体检报告解读</div><button class="btn btn-primary" data-page-link="ai">进入 AI 分析</button></div>
+              <div class="card report-card">
+                <h3>体检报告解读流程</h3>
+                <p>用户粘贴体检报告后，系统将报告文本和健康画像输入提示词，结合健康知识检索与模型分析，返回整体评估、异常指标、风险等级和健康建议。</p>
+                <div class="pipeline"><span>报告输入</span><span>提示词构建</span><span>知识检索</span><span>模型分析</span><span>结构化呈现</span></div>
+              </div>
+            </section>
+
+            <section class="page" id="page-suggestion">
+              <div class="page-header"><div class="page-title"><span class="title-icon">💡</span>健康评估建议</div></div>
+              <div class="content-grid">
+                <div class="card"><div class="card-header"><div class="card-title">健康评估</div></div><p class="paragraph" id="healthEvaluationText">正在根据身体信息生成健康评估。</p></div>
+                <div class="card"><div class="card-header"><div class="card-title">建议生成</div></div><div id="healthAdviceList"></div></div>
+              </div>
+            </section>
+
+            <section class="page" id="page-sport">
+              <div class="page-header"><div class="page-title"><span class="title-icon">🏃</span>运动知识</div><button class="btn btn-secondary" id="loadSportBtn">读取运动知识接口</button></div>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>运动类型</th><th>适合时间</th><th>适合心率</th><th>推荐频率</th><th>推荐速度</th></tr></thead>
+                  <tbody id="sportBody"></tbody>
+                </table>
+              </div>
+              <div class="pagination" id="sportPagination"></div>
+            </section>
+
+            <section class="page" id="page-admin">
+              <div class="page-header"><div class="page-title"><span class="title-icon">⚙</span>系统管理</div><button class="btn btn-secondary" id="loadAdminBtn">读取用户/角色/菜单</button></div>
+              <div class="admin-stat-grid">
+                <div class="admin-stat"><div>用户总数</div><strong id="adminUserCount">0</strong></div>
+                <div class="admin-stat"><div>角色数量</div><strong id="adminRoleCount">0</strong></div>
+                <div class="admin-stat"><div>菜单数量</div><strong id="adminMenuCount">0</strong></div>
+              </div>
+              <div class="admin-grid">
+                <div class="card admin-table-card"><div class="card-header"><div class="card-title">用户列表</div></div><div id="userAdminList"></div></div>
+                <div class="card admin-table-card"><div class="card-header"><div class="card-title">角色权限</div></div><div id="roleAdminList"></div></div>
+                <div class="card admin-table-card"><div class="card-header"><div class="card-title">菜单资源</div></div><div id="menuAdminList"></div></div>
+              </div>
+            </section>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
